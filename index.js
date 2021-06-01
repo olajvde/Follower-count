@@ -40,4 +40,4 @@ app.post("/", async (req, res) => {
 
   res.json(subCount);
 });
-app.listen(3000, () => console.log("App Started"));
+app.listen(process.env.PORT || 3000, () => console.log("App Started"));
