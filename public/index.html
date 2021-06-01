@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;1,200&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+      integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <title>Social Media Follower Count</title>
+  </head>
+  <body>
+    <h3>Social follower Count</h3>
+
+    <div class="loader">
+      <img src="./Spinner-1s-200px.svg" alt="" />
+    </div>
+    <br />
+    <div class="counter">
+      <div class="twitter">
+        <i class="fab fa-twitter"></i>
+        <div class="count twitter-count">0</div>
+        <h4>Followers</h4>
+      </div>
+      <div class="Instagram">
+        <i class="fab fa-instagram"></i>
+        <div class="count ig-count">0</div>
+        <h4>Followers</h4>
+      </div>
+    </div>
+
+    <button class="button">Get Count</button>
+
+    <script>
+      const button = document.querySelector(".button");
+      const twCount = document.querySelector(".twitter-count");
+      const igCount = document.querySelector(".ig-count");
+      const counters = document.querySelectorAll(".count");
+      const loader = document.querySelector(".loader");
+
+      button.addEventListener("click", requestData);
+
+      function requestData() {
+        console.log("Button CLicked");
+        loader.style.display = "block";
+
+        let xhr = new XMLHttpRequest();
+
+        xhr.open("POST", "/", true);
+
+        xhr.onload = function () {
+          if (this.status == 200) {
+            let data = JSON.parse(this.responseText);
+            twCount.setAttribute("data-target", data.twitterCount);
+            igCount.setAttribute("data-target", data.instacount);
+            loader.style.display = "none";
+            animateCounters();
+          } else {
+            console.log("something went wrong");
+          }
+        };
+        xhr.send();
+      }
+
+      function animateCounters() {
+        let speed = 50;
+        counters.forEach((counter) => {
+          counter.innerText = 0;
+          const target = +counter.getAttribute("data-target");
+          const updateCounter = () => {
+            let count = +counter.innerText;
+            let inc = target / speed;
+            if (count < target) {
+              counter.innerText = Math.floor(count + inc);
+              setTimeout(updateCounter, 20);
+            } else {
+              counter.innerText = target;
+            }
+          };
+          updateCounter();
+        });
+      }
+    </script>
+  </body>
+</html>
